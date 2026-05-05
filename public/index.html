@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Májová Regata 2026 · Generátor hymnů posádek</title>
+<meta name="description" content="Vykuj své jachtařské posádce vlastní rockový hymnus pro Májovou regatu 2026.">
+<meta property="og:title" content="Hymnus posádky · Májová Regata 2026">
+<meta property="og:description" content="Generátor rockových hymnů pro posádky Májové regaty 2026.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <a class="menu-link" href="/hymny">⚓ Galerie</a>
+  <a class="brand" href="https://www.majovaregata.cz" target="_blank" aria-label="Májová regata">
+    <span class="brand-icon">
+      <svg viewBox="0 0 18 22" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 1 L15 11 L9 11 L9 21 L7 21 L7 11 L3 11 Z" fill="#ee7e6c"/>
+      </svg>
+    </span>
+    <span class="brand-text">Májová<br>Regata</span>
+  </a>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-kicker">⚡ Rocková mašina ⚡ Anno MMXXVI</div>
+    <h1>Hymnus<br>Posádky</h1>
+    <div class="hero-sub">G E N E R Á T O R&nbsp;&nbsp;&nbsp;P Í S N Í</div>
+    <p class="hero-tagline">
+      Vykuj své posádce vlastní <em>rockový hymnus</em> pro Májovou regatu 2026.
+      Stačí jméno posádky a pár slov, která vás vystihují — AI nahraje
+      skladbu s vokály a kytarami a uloží ji navždy do galerie.
+    </p>
+    <a href="#tvorba" class="btn-outline">Začít tvořit</a>
+  </div>
+  <a href="#tvorba" class="scroll-cue">Scroll</a>
+</section>
+
+<section class="section" id="tvorba">
+  <span class="section-num">01</span>
+  <div class="section-inner">
+    <div class="section-kicker">Májová Regata 2026</div>
+    <h2>Lodní<br>deník<br>posádky</h2>
+    <p class="lede">
+      Zaznamenej do palubního deníku jméno své posádky a slova, která vás
+      vystihují. Náš generátor z toho upede plnohodnotný rockový kus —
+      hotová stopa pak skončí na permanentním odkazu, který můžeš poslat lidem.
+    </p>
+
+    <div class="form-grid">
+      <div class="field">
+        <label for="crewName">Jméno posádky</label>
+        <input type="text" id="crewName" placeholder="např. Bouřliváci, Kraken's Fist…" maxlength="60" />
+        <div class="field-hint">Toto jméno se opakuje v refrénu a stane se z něj pokřik posádky.</div>
+      </div>
+
+      <div class="field">
+        <label for="words">Slova, která vás vystihují</label>
+        <textarea id="words" rows="3" placeholder="např. nezdolní, divocí, milujeme grog, vždycky první u baru, neztratíme se ve fjordu…"></textarea>
+        <div class="field-hint">3–10 výrazů, vlastností nebo vtipů.</div>
+      </div>
+
+      <div class="row-2">
+        <div class="field">
+          <label for="length">Délka skladby</label>
+          <select id="length">
+            <option value="clip">Clip · 30 sekund</option>
+            <option value="pro">Pro · až 3 minuty</option>
+          </select>
+          <div class="field-hint">Pro plný hymnus zvolte „Pro".</div>
+        </div>
+        <div class="field">
+          <label for="intensity">Tvrdost</label>
+          <select id="intensity">
+            <option value="classic">Classic Rock</option>
+            <option value="hard" selected>Hard Rock</option>
+            <option value="metal">Heavy Metal</option>
+          </select>
+          <div class="field-hint">Charakter zvuku.</div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-primary" id="generateBtn">Vykovat hymnus</button>
+      </div>
+
+      <div class="status" id="status">
+        <div class="status-title">Probíhá generování</div>
+        <div id="steps">
+          <div class="step" id="step-1"><span class="dot"></span><span>Skládám text písně</span></div>
+          <div class="step" id="step-2"><span class="dot"></span><span>Nahrávám rockovou skladbu</span></div>
+          <div class="step" id="step-3"><span class="dot"></span><span>Ukládám do galerie</span></div>
+        </div>
+      </div>
+
+      <div class="permalink-banner" id="permalink">
+        <div class="permalink-banner-title">✓ Hymnus uložen — přesměrovávám…</div>
+        <div class="permalink-banner-url" id="permalinkUrl"></div>
+      </div>
+
+      <div class="notice">
+        <strong>Pozn.:</strong> Generování trvá 20–60 s pro Clip, 60–120 s pro Pro. Hymnus je po vytvoření trvale dostupný na <a href="/hymny" style="color:var(--coral)">veřejné galerii</a>. Pokud vokály v češtině zní zvláštně, regeneruj — Lyria 3 je v public preview.
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="small">Projekt fanoušků <a href="https://www.majovaregata.cz" target="_blank">Májové regaty</a></div>
+  <div class="small" style="opacity:.7">Powered by Google Gemini · Lyria 3 · Cloudflare R2</div>
+</footer>
+
+<script>
+const $ = (id) => document.getElementById(id);
+
+function setStep(n, state){
+  const el = $(`step-${n}`);
+  if (!el) return;
+  el.classList.remove('active','done');
+  if (state) el.classList.add(state);
+}
+function showStatus(active, isError = false){
+  $('status').classList.toggle('active', active);
+  $('status').classList.toggle('error', isError);
+}
+function flashError(msg){
+  $('status').classList.add('active','error');
+  $('steps').innerHTML = `<div style="font-weight:500;color:#ffb0b5;line-height:1.6">${msg}</div>`;
+  $('status').querySelector('.status-title').textContent = '⚠ Chyba';
+}
+function resetStatus(){
+  $('status').querySelector('.status-title').textContent = 'Probíhá generování';
+  $('steps').innerHTML = `
+    <div class="step" id="step-1"><span class="dot"></span><span>Skládám text písně</span></div>
+    <div class="step" id="step-2"><span class="dot"></span><span>Nahrávám rockovou skladbu</span></div>
+    <div class="step" id="step-3"><span class="dot"></span><span>Ukládám do galerie</span></div>
+  `;
+  $('status').classList.remove('error');
+  $('permalink').classList.remove('show');
+}
+
+async function callJson(url, body){
+  const res = await fetch(url, {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(body)
+  });
+  if (!res.ok){
+    let msg = `${res.status}`;
+    try { const e = await res.json(); msg += ' · ' + (e.error || JSON.stringify(e)); }
+    catch { try { msg += ' · ' + (await res.text()).slice(0,200); } catch {} }
+    throw new Error(msg);
+  }
+  return res.json();
+}
+
+$('generateBtn').addEventListener('click', async () => {
+  const crewName = $('crewName').value.trim();
+  const words = $('words').value.trim();
+  const length = $('length').value;
+  const intensity = $('intensity').value;
+
+  if (!crewName){ alert('Zadej jméno posádky.'); return; }
+  if (!words){ alert('Zadej alespoň pár slov, která vás vystihují.'); return; }
+
+  resetStatus(); showStatus(true);
+  $('generateBtn').disabled = true;
+
+  try {
+    setStep(1, 'active');
+    const lyricsRes = await callJson('/api/lyrics', { crewName, words, intensity });
+    setStep(1, 'done');
+
+    setStep(2, 'active');
+    const musicRes = await callJson('/api/music', {
+      crewName, words, intensity, length, lyrics: lyricsRes.lyrics
+    });
+    setStep(2, 'done');
+
+    setStep(3, 'active');
+    // Hudba už je uložená; jen zobrazíme banner s odkazem a přesměrujeme
+    setStep(3, 'done');
+
+    const url = musicRes.permalinkUrl || `/h/${musicRes.slug}`;
+    $('permalinkUrl').textContent = window.location.origin + url;
+    $('permalink').classList.add('show');
+
+    setTimeout(() => { window.location.href = url; }, 1400);
+
+  } catch (err) {
+    console.error(err);
+    flashError(err.message || String(err));
+    $('generateBtn').disabled = false;
+  }
+});
+</script>
+</body>
+</html>
