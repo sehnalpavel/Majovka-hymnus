@@ -17,10 +17,16 @@ echo ""
 # Prerequisites
 command -v git  >/dev/null || { red "❌ git není nainstalovaný. V Termuxu: pkg install git"; exit 1; }
 command -v curl >/dev/null || { red "❌ curl není nainstalovaný. V Termuxu: pkg install curl"; exit 1; }
-[ -d .git ] || { red "❌ Tento adresář není git repo. Spusť script v majova-regata-anthem/."; exit 1; }
 
-# Check if remote already configured
-if git remote get-url origin >/dev/null 2>&1; then
+# Sanity check: are we in the project folder?
+[ -f "package.json" ] || { red "❌ Nejsi v adresáři projektu. Spusť ze složky majova-regata-anthem/."; exit 1; }
+[ -f "server.js" ]    || { red "❌ Nejsi v adresáři projektu. Spusť ze složky majova-regata-anthem/."; exit 1; }
+
+# Check for existing .git and existing remote
+HAS_GIT=false
+[ -d ".git" ] && HAS_GIT=true
+
+if $HAS_GIT && git remote get-url origin >/dev/null 2>&1; then
   EXISTING=$(git remote get-url origin)
   yellow "⚠️  Remote 'origin' už existuje: $EXISTING"
   read -p "Přepsat? [y/N]: " OVR
@@ -53,14 +59,31 @@ echo ""
 [ -z "$GH_TOKEN" ] && { red "Token je povinný."; exit 1; }
 echo ""
 
-# Update git identity
-git config user.name "$GIT_NAME"
+# Initialize git repo if needed
+if ! $HAS_GIT; then
+  green "🔧 Inicializuji git repo…"
+  git init -q
+fi
+
+# Always ensure we're on main branch
+git checkout -q -B main 2>/dev/null || git branch -M main
+
+# Set git identity (now safe — repo exists)
+git config user.name  "$GIT_NAME"
 git config user.email "$GIT_EMAIL"
 
-# Amend initial commit so it has correct authorship
-green "🔧 Nastavuji autorství commitu…"
-git -c user.name="$GIT_NAME" -c user.email="$GIT_EMAIL" \
-    commit --amend --reset-author --no-edit -q || true
+# Stage and commit
+git add -A
+
+if [ -z "$(git log --oneline 2>/dev/null)" ]; then
+  green "📝 Vytvářím první commit…"
+  git commit -q -m "Initial commit"
+elif ! git diff --cached --quiet 2>/dev/null; then
+  green "📝 Commituji změny…"
+  git commit -q -m "Update"
+else
+  green "📝 Žádné nové změny ke commitu, jdu rovnou na push."
+fi
 
 # Create repo via GitHub API
 echo ""
@@ -69,7 +92,7 @@ HTTP=$(curl -s -o /tmp/gh-create.json -w "%{http_code}" \
   -H "Authorization: token $GH_TOKEN" \
   -H "Accept: application/vnd.github+json" \
   https://api.github.com/user/repos \
-  -d "{\"name\":\"$REPO_NAME\",\"private\":$PRIVATE,\"description\":\"Generátor rockových hymnů pro Májovou regatu 2026\"}")
+  -d "{\"name\":\"$REPO_NAME\",\"private\":$PRIVATE,\"description\":\"Generator rockovych hymnu pro Majovou regatu 2026\"}")
 
 if [ "$HTTP" = "201" ]; then
   green "  ✓ Repo vytvořeno"
@@ -87,17 +110,13 @@ fi
 # Configure git credential helper so future pushes don't re-prompt
 green "🔑 Ukládám přihlašovací údaje (git credential helper store)…"
 git config --global credential.helper store
-mkdir -p ~/.config/git 2>/dev/null || true
-# Write credentials file (chmod 600)
 CRED_FILE="$HOME/.git-credentials"
-# Remove any existing entry for this host first
 [ -f "$CRED_FILE" ] && grep -v "github.com" "$CRED_FILE" > "$CRED_FILE.tmp" 2>/dev/null && mv "$CRED_FILE.tmp" "$CRED_FILE" || true
 echo "https://${GH_USER}:${GH_TOKEN}@github.com" >> "$CRED_FILE"
 chmod 600 "$CRED_FILE"
 
 # Set remote and push
 green "🚀 Push na GitHub…"
-git branch -M main
 git remote add origin "https://github.com/$GH_USER/$REPO_NAME.git"
 
 if git push -u origin main; then
@@ -124,5 +143,4 @@ else
   exit 1
 fi
 
-# Clean up
 rm -f /tmp/gh-create.json
