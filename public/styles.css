@@ -90,14 +90,14 @@ body{
 }
 .hero-inner{ position:relative;z-index:2; max-width:920px; width:100%; }
 .hero-kicker{
-  font-size:13px; font-weight:700; letter-spacing:.35em; color:var(--coral);
-  text-transform:uppercase; margin-bottom:24px;
+  font-size:13px; font-weight:700; letter-spacing:.20em; color:var(--coral);
+  text-transform:uppercase; margin-bottom:24px;white-space:nowrap;
 }
 .hero h1{
   font-size:clamp(54px, 12vw, 130px);
   font-weight:900; letter-spacing:-.01em; line-height:.95;
   text-transform:uppercase; margin-bottom:18px;
-  word-break:break-word;
+  word-break:normal;
 }
 .hero-sub{
   font-size:clamp(14px, 2.6vw, 22px);
