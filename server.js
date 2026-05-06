@@ -86,7 +86,7 @@ app.post('/api/lyrics', rateLimit, async (req, res) => {
     const cleanWords = String(words).slice(0, 600);
     const intensityLabel = INTENSITY_LABEL_CS[intensity] || INTENSITY_LABEL_CS.hard;
 
-    const prompt = `Jsi zkušený rockový textař. Napiš v češtině text písně v žánru ${intensityLabel} pro jachtařskou posádku jménem "${cleanCrew}", která se účastní Májové regaty (česká námořní jachtařská regata).
+    const prompt = `Jsi zkušený rockový textař. Napiš v češtině text písně v žánru ${intensityLabel} pro jachtařskou posádku jménem "${cleanCrew}", která se účastní Májové regaty (česká námořní jachtařská regata), která se účastní Májové regaty 2026 — legendárního závodu plachetnic (First, Salona) na chorvatskych vodach (murter, biograd, kaštela) — s 40+ loděmi, atmosférou kamarádství, grogu, večerních zabav na mole a urputné soutěžení
 
 Posádku vystihují tato slova: "${cleanWords}"
 
@@ -94,7 +94,7 @@ POŽADAVKY:
 - Sloka 1 (4 řádky): představení posádky, jejich charakteru, života na moři
 - Refrén (4 řádky): MUSÍ obsahovat výkřik / volání jména "${cleanCrew}" alespoň dvakrát, anthemický, k sólovému zpěvu davu
 - Sloka 2 (4 řádky): dobrodružství, regata, vlny, vítr
-- Refrén (znovu, stejný)
+- Refrén 2 (variace prvního refrénu — stejný hook se jménem, ale lehce jiné okolní řádky)
 - Bridge (2 řádky): zlomový moment
 - Refrén (finální výbuch)
 
@@ -103,6 +103,8 @@ STYL:
 - Nautické obrazy: vlny, kotva, plachty, vítr, sůl, bouře, ráhno, kýl
 - Krátké údernější verše (8–12 slabik)
 - Češtinu měj přirozenou, rytmickou, ne knižní
+
+ZAKÁZÁNO: klišé typu „hořící duše", „navěky", „zní bouře v nás", „srdce mé volá", obecné fráze. Buď konkrétní, syrový, drsný.
 
 Odpověz POUZE textem písně se značkami sekcí ve hranatých závorkách: [Sloka 1], [Refrén], [Sloka 2], [Refrén], [Bridge], [Refrén]. Žádný komentář.`;
 
@@ -135,7 +137,7 @@ app.post('/api/music', rateLimit, async (req, res) => {
     const model = useProModel ? MUSIC_MODEL_PRO : MUSIC_MODEL_CLIP;
 
     const musicPrompt = `${styleText}.
-Theme: a Czech yacht-racing crew called "${crewName}" competing in a sailing regatta on stormy seas.
+Theme: a Czech yacht-racing crew called "${crewName}" competing in the Májová Regata sailing race in 2026, racing on Czech reservoirs with passion and team spirit.
 Vocals: powerful raw male lead vocal in CZECH language, anthemic shout-along chorus where the crew name "${crewName}" is shouted multiple times.
 The lyrics (in Czech) to perform are below — follow this song structure with verses and choruses:
 
