@@ -41,14 +41,14 @@ const STYLE_PROMPTS = {
             bluegrass: "bluegrass anthem in the style of Old Crow Medicine Show and Mumford & Sons: fast strummed acoustic guitar, banjo rolls, fiddle melody runs, upright bass walking lines, mandolin chops, tight male vocal harmonies, foot-stomping tempo around 130 bpm, joyful and rousing campfire energy"
             };
 
-            const INTENSITY_LABEL_CS = {
-              classic: 'classic rock',
-                hard: 'hard rock',
-                  metal: 'heavy metal',
-                    country: 'country',
-                      bluegrass: 'bluegrass'
-                      };
-}
+const INTENSITY_LABEL_CS = {
+  classic: 'classic rock',
+  hard: 'hard rock',
+  metal: 'heavy metal',
+  country: 'country',
+  bluegrass: 'bluegrass'
+};
+
 // ============== MIDDLEWARE ==============
 app.use(express.json({ limit: '256kb' }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -157,7 +157,7 @@ Odpověz POUZE textem písně se značkami sekcí ve hranatých závorkách: [Sl
 
     const lyrics = (data?.candidates?.[0]?.content?.parts || [])
       .map(p => p.text).filter(Boolean).join('\n').trim();
-    if (!lyrics) return res.status(502).json( prompt{ error:'Gemini nevrátil text. Zkus regenerovat.' });
+    if (!lyrics) return res.status(502).json({ error:'Gemini nevrátil text. Zkus regenerovat.' });
 
     res.json({ lyrics });
   } catch (err){
