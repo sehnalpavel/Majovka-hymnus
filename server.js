@@ -34,12 +34,21 @@ if (!isR2Configured()){
 }
 
 const STYLE_PROMPTS = {
-  classic: "classic rock anthem in the spirit of AC/DC and Thin Lizzy: clean-distorted Marshall guitars, driving 4/4 backbeat, gritty male lead vocals, anthemic chorus singalong, raw energy",
-  hard:    "hard rock anthem with heavy distorted electric guitars, pounding kick drums and crashing cymbals, thick bass guitar, aggressive male vocals, soaring anthemic chorus, big production",
-  metal:   "heavy metal anthem with palm-muted shredding guitars, double-bass drums, growling male lead vocal, screaming high notes in chorus, fast tempo around 160 bpm, raw and powerful"
-};
-const INTENSITY_LABEL_CS = { classic: 'classic rock', hard: 'hard rock', metal: 'heavy metal' };
+    classic: "classic rock anthem in the spirit of AC/DC and Thin Lizzy: clean-distorted Marshall guitars, driving 4/4 backbeat, gritty male lead vocals, anthemic chorus singalong, raw energy",
+      hard: "hard rock anthem with heavy distorted electric guitars, pounding kick drums and crashing cymbals, thick bass guitar, aggressive male vocals, soaring anthemic chorus, big production",
+        metal: "heavy metal anthem with palm-muted shredding guitars, double-bass drums, growling male lead vocal, screaming high notes in chorus, fast tempo around 160 bpm, raw and powerful",
+          country: "modern country anthem in the style of Zac Brown Band and Eric Church: acoustic guitar strumming, electric guitar twang with light overdrive, pedal steel licks, kick-snare backbeat, warm male lead vocals with storytelling delivery, harmonized chorus, mid-tempo around 110 bpm, heartfelt and rousing",
+            bluegrass: "bluegrass anthem in the style of Old Crow Medicine Show and Mumford & Sons: fast strummed acoustic guitar, banjo rolls, fiddle melody runs, upright bass walking lines, mandolin chops, tight male vocal harmonies, foot-stomping tempo around 130 bpm, joyful and rousing campfire energy"
+            };
 
+            const INTENSITY_LABEL_CS = {
+              classic: 'classic rock',
+                hard: 'hard rock',
+                  metal: 'heavy metal',
+                    country: 'country',
+                      bluegrass: 'bluegrass'
+                      };
+}
 // ============== MIDDLEWARE ==============
 app.use(express.json({ limit: '256kb' }));
 app.use(express.static(path.join(__dirname, 'public')));
