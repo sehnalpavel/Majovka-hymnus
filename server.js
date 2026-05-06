@@ -90,13 +90,36 @@ app.post('/api/lyrics', rateLimit, async (req, res) => {
 
 Posádku vystihují tato slova: "${cleanWords}"
 
-POŽADAVKY:
-- Sloka 1 (4 řádky): představení posádky, jejich charakteru, života na moři
-- Refrén (4 řádky): MUSÍ obsahovat výkřik / volání jména "${cleanCrew}" alespoň dvakrát, anthemický, k sólovému zpěvu davu
-- Sloka 2 (4 řádky): dobrodružství, regata, vlny, vítr
-- Refrén 2 (variace prvního refrénu — stejný hook se jménem, ale lehce jiné okolní řádky)
-- Bridge (2 řádky): zlomový moment
-- Refrén (finální výbuch)
+POŽADAVKY NA STRUKTURU:
+- Sloka 1 (4 řádky): představení posádky, charakter, život na moři, schéma rýmů ABAB
+- Refrén (4 řádky): MUSÍ obsahovat výkřik jména "${cleanCrew}" 2x, anthemický, schéma AABB nebo ABAB
+- Sloka 2 (4 řádky): dobrodružství, regata, vítr, ABAB rýmy
+- Refrén (stejný hook se jménem, lehce jiné okolní řádky)
+- Bridge (2 řádky): zlomový moment, AA rým
+- Refrén (finální)
+
+POŽADAVKY NA RÝMY (KRITICKÉ):
+- KAŽDÝ řádek MUSÍ končit slovem, které se RÝMUJE s odpovídajícím řádkem (nejen vizuálně, ale ZVUKEM v mluvené češtině)
+- Příklad správného rýmu: "vítr se honí" / "loď se kloní" (-oní / -oní zní stejně)
+- Příklad ŠPATNÉHO rýmu: "moře" / "hoře" se ZNÁ PŘIROZENĚ stejně, ale "moře" / "kotva" NIKDY
+- Před napsáním řádku si nahlas ověř, jestli koncové slabiky znějí stejně
+- Lepší jednoduchý čistý rým než vznešený, který nesedí
+- Pokud váháš mezi dvěma slovy, vyber to s lepším rýmem, i když mění význam
+- ZAKÁZÁNO: rýmovat slovesa s -át, -ít, -et navzájem (líbat / vidět NENÍ rým)
+- ZAKÁZÁNO: tzv. "oční rýmy" (slova co vypadají, ale neslyší se stejně)
+
+POŽADAVKY NA JAZYK:
+- Krátké údernější verše (7–10 slabik na řádek)
+- Stejný počet slabik v rýmujících se řádcích (±1)
+- Češtinu měj přirozenou, rytmickou, ne knižní ani archaickou
+- Drsný, hrdý, ${intensityLabel} postoj
+- Nautické obrazy: vlny, kotva, plachty, vítr, sůl, bouře, ráhno, kýl, paluba, mola, mokré dlaně, večerní oheň
+- Použij konkrétní detaily, ne obecné fráze ("piva v krčmě" > "radost v duši")
+
+ZAKÁZÁNO:
+- Klišé: "hořící duše", "navěky", "srdce mé volá", "v žilách se vzedmou", "bouře v nás"
+- Obecná abstrakta bez fyzického obrazu
+- Anglicismy nebo přeložené idiomy
 
 STYL:
 - Drsný, hrdý, hard rock postoj
@@ -104,18 +127,28 @@ STYL:
 - Krátké údernější verše (8–12 slabik)
 - Češtinu měj přirozenou, rytmickou, ne knižní
 
+PŘÍKLAD KVALITNÍHO REFRÉNU (jen jako vzor stylu, ne k opisování):
+
+[Refrén]
+"Bouřliváci, řvi to nahlas!     (rým A)
+Nás ten vítr nikdy nezhasl!     (rým A)  
+Bouřliváci, plachty napni,       (rým B)
+S námi vlnu hravě naplňíš si!"   (rým B)
+
+(Všimni si: -ahlas / -ezhasl je rytmicky čistý rým, -napni / -aplňíš si také.)
+
 ZAKÁZÁNO: klišé typu „hořící duše", „navěky", „zní bouře v nás", „srdce mé volá", obecné fráze. Buď konkrétní, syrový, drsný.
 
 Odpověz POUZE textem písně se značkami sekcí ve hranatých závorkách: [Sloka 1], [Refrén], [Sloka 2], [Refrén], [Bridge], [Refrén]. Žádný komentář.`;
 
     const data = await callGemini(TEXT_MODEL, {
       contents: [{ role:'user', parts:[{ text: prompt }] }],
-      generationConfig: { temperature: 0.95, topP: 0.95 }
+      generationConfig: { temperature: 0.85, topP: 0.95 }
     });
 
     const lyrics = (data?.candidates?.[0]?.content?.parts || [])
       .map(p => p.text).filter(Boolean).join('\n').trim();
-    if (!lyrics) return res.status(502).json({ error:'Gemini nevrátil text. Zkus regenerovat.' });
+    if (!lyrics) return res.status(502).json( prompt{ error:'Gemini nevrátil text. Zkus regenerovat.' });
 
     res.json({ lyrics });
   } catch (err){
